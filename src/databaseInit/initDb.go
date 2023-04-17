@@ -9,8 +9,6 @@ import (
 	"gorm.io/gorm"
 )
 
-var db *gorm.DB
-
 func InitDb() *gorm.DB {
 	// Load the configuration file
 	viper.SetConfigName("config")
@@ -25,9 +23,7 @@ func InitDb() *gorm.DB {
 	dbName := viper.GetString("database.name")
 
 	createDatabaseIfNotExist(connectionString, dbName)
-	updateDbSchema(connectionString, dbName)
-
-	return db
+	return updateDbSchema(connectionString, dbName)
 }
 
 func createDatabaseIfNotExist(connectionString string, dbName string) {
@@ -52,7 +48,7 @@ func createDatabaseIfNotExist(connectionString string, dbName string) {
 	defer dbSql.Close()
 }
 
-func updateDbSchema(connectionString string, dbName string) {
+func updateDbSchema(connectionString string, dbName string) *gorm.DB {
 	dsn := connectionString + dbName
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
@@ -63,4 +59,6 @@ func updateDbSchema(connectionString string, dbName string) {
 	if autoMigrate != nil {
 		panic(autoMigrate.Error())
 	}
+
+	return db
 }
