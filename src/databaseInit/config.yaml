@@ -1,0 +1,3 @@
+database:
+  connectionString: root:Gekko100@tcp(localhost:3306)/
+  name: flightbooking_db
