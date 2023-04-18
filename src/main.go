@@ -21,6 +21,7 @@ func main() {
 
 	router := gin.Default()
 	router.GET("/api/flights", flightCtrl.GetAllFlights)
+	router.GET("/api/flights/:id", flightCtrl.GetFlightById)
 
 	err := router.Run(":8080")
 	if err != nil {
