@@ -16,9 +16,18 @@ func NewFlightController(flightService interfaces.IFlightService) FlightControll
 }
 
 func (controller FlightController) GetAllFlights(context *gin.Context) {
-	flights, err := controller.FlightService.GetAllFlights()
+	flights, status, err := controller.FlightService.GetAllFlights()
 	if err != nil {
-		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		context.AbortWithStatusJSON(status, gin.H{"error": err.Error()})
+		return
+	}
+	context.JSON(http.StatusOK, flights)
+}
+
+func (controller FlightController) GetFlightById(context *gin.Context) {
+	flights, status, err := controller.FlightService.GetFlightById(context.Param("id"))
+	if err != nil {
+		context.AbortWithStatusJSON(status, gin.H{"error": err.Error()})
 		return
 	}
 	context.JSON(http.StatusOK, flights)
